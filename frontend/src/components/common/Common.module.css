@@ -1,0 +1,43 @@
+/* BUTTON */
+.btn {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* sizes */
+.sm  { padding: 0.38rem 0.85rem; font-size: 0.8rem;  border-radius: 8px; }
+.md  { padding: 0.6rem  1.4rem;  font-size: 0.92rem; }
+.lg  { padding: 0.8rem  2rem;    font-size: 1rem;    border-radius: 12px; }
+.full { width: 100%; justify-content: center; padding: 0.85rem; font-size: 1rem; border-radius: 12px; }
+
+/* variants */
+.primary { background: var(--accent); color: #fff; }
+.primary:hover:not(:disabled) { background: #8e80fb; transform: translateY(-1px); box-shadow: 0 8px 24px var(--accent-glow); }
+
+.ghost { background: none; color: var(--text); border: 1px solid var(--border2); }
+.ghost:hover { background: var(--surface2); }
+
+.danger { background: #fa6d8e18; color: var(--accent2); border: 1px solid #fa6d8e22; }
+.danger:hover { background: #fa6d8e28; }
+
+.success { background: #4eeaa018; color: var(--accent3); border: 1px solid #4eeaa022; }
+.success:hover { background: #4eeaa028; }
+
+/* BADGES */
+.badge { font-size: 0.7rem; font-weight: 600; padding: 0.22rem 0.7rem; border-radius: 100px; white-space: nowrap; }
+.bOpen     { background: #4eeaa015; color: var(--accent3); border: 1px solid #4eeaa025; }
+.bAnswered { background: #7c6dfa15; color: #b0a8ff;        border: 1px solid #7c6dfa25; }
+.bClosed   { background: #ffffff08; color: var(--muted2);  border: 1px solid var(--border); }
+
+.rbStudent { background: #7c6dfa15; color: #b0a8ff;       border-radius: 100px; }
+.rbTeacher { background: #4eeaa015; color: var(--accent3); border-radius: 100px; }
+.rbAdmin   { background: #fa6d8e15; color: var(--accent2); border-radius: 100px; }

@@ -1,0 +1,50 @@
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem; height: 60px;
+  background: #07070dee; backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 1.3rem;
+  letter-spacing: -0.04em; cursor: pointer;
+  color: var(--text);
+}
+
+.logo span { color: var(--accent); }
+
+.links { display: flex; gap: 0.3rem; list-style: none; }
+
+.navBtn {
+  background: none; border: none;
+  color: var(--muted2); font-size: 0.88rem; font-weight: 500;
+  padding: 0.45rem 0.9rem; border-radius: 8px;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+
+.navBtn:hover { color: var(--text); background: var(--surface2); }
+.active { color: var(--text) !important; background: var(--surface2) !important; }
+
+.badge {
+  background: var(--accent2); color: #fff;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 0.1rem 0.4rem; border-radius: 100px;
+  min-width: 18px; text-align: center;
+}
+
+.right { display: flex; align-items: center; gap: 0.8rem; }
+
+.userPill {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 100px; padding: 0.3rem 0.9rem 0.3rem 0.4rem;
+  cursor: pointer; transition: all 0.2s;
+}
+
+.userPill:hover { background: var(--surface3); border-color: var(--border2); }
+
+.uname { font-size: 0.85rem; font-weight: 500; }
+.exitIcon { color: var(--muted); font-size: 0.8rem; }

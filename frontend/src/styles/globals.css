@@ -1,0 +1,108 @@
+/* ─── GLOBAL STYLES ─── */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+:root {
+  --bg:       #07070d;
+  --surface:  #0f0f18;
+  --surface2: #16161f;
+  --surface3: #1e1e2a;
+  --border:   #ffffff0c;
+  --border2:  #ffffff18;
+  --accent:   #7c6dfa;
+  --accent-glow: #7c6dfa40;
+  --accent2:  #fa6d8e;
+  --accent3:  #4eeaa0;
+  --warn:     #facc15;
+  --text:     #eeeef8;
+  --muted:    #5a5a72;
+  --muted2:   #8888a0;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 30%, transparent 100%);
+  pointer-events: none;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 700px 500px at 15% 15%, #7c6dfa14, transparent 65%),
+    radial-gradient(ellipse 500px 400px at 85% 75%, #fa6d8e10, transparent 65%),
+    radial-gradient(ellipse 400px 400px at 50% 100%, #4eeaa008, transparent 65%);
+  pointer-events: none;
+}
+
+/* ─── RESETS ─── */
+button { cursor: pointer; font-family: 'DM Sans', sans-serif; }
+input, textarea, select {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(20px) scale(0.95); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseBorder {
+  0%   { border-color: var(--accent); box-shadow: 0 0 0 0 var(--accent-glow); }
+  50%  { border-color: var(--accent); box-shadow: 0 0 0 6px transparent; }
+  100% { border-color: var(--border); box-shadow: none; }
+}
+
+/* ─── UTILITY ─── */
+.page-enter { animation: fadeIn 0.3s ease; }
+
+.z1 { position: relative; z-index: 1; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
