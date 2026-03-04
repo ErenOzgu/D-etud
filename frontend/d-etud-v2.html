@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-etud</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07070d;
+  --surface: #0f0f18;
+  --surface2: #16161f;
+  --surface3: #1e1e2a;
+  --border: #ffffff0c;
+  --border2: #ffffff18;
+  --accent: #7c6dfa;
+  --accent-glow: #7c6dfa40;
+  --accent2: #fa6d8e;
+  --accent3: #4eeaa0;
+  --warn: #facc15;
+  --text: #eeeef8;
+  --muted: #5a5a72;
+  --muted2: #8888a0;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* BG GRID */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 30%, transparent 100%);
+  pointer-events:none;
+}
+
+body::after {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 700px 500px at 15% 15%, #7c6dfa14 0%, transparent 65%),
+    radial-gradient(ellipse 500px 400px at 85% 75%, #fa6d8e10 0%, transparent 65%),
+    radial-gradient(ellipse 400px 400px at 50% 100%, #4eeaa008 0%, transparent 65%);
+  pointer-events:none;
+}
+
+/* ─── SCREENS ─── */
+.screen { display:none; position:relative; z-index:1; min-height:100vh; }
+.screen.active { display:block; }
+
+/* ─── AUTH ─── */
+#screen-auth {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 2rem;
+}
+
+.auth-card {
+  width:100%; max-width:440px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 24px;
+  padding: 2.5rem;
+  animation: fadeUp 0.5s ease both;
+  box-shadow: 0 40px 80px #00000060;
+}
+
+.auth-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight:800; font-size:1.8rem;
+  letter-spacing:-0.04em;
+  margin-bottom:0.4rem;
+  display:flex; align-items:center; gap:0.4rem;
+}
+
+.auth-logo .dot { color: var(--accent); }
+
+.auth-sub { color:var(--muted2); font-size:0.9rem; margin-bottom:2rem; }
+
+.tab-row {
+  display:flex;
+  background: var(--surface2);
+  border-radius:12px;
+  padding:4px;
+  margin-bottom:1.8rem;
+  gap:4px;
+}
+
+.tab-btn {
+  flex:1; padding:0.55rem;
+  border-radius:9px; border:none;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.9rem; font-weight:500;
+  cursor:pointer; transition:all 0.2s;
+  color:var(--muted2); background:none;
+}
+
+.tab-btn.active { background:var(--accent); color:#fff; }
+
+.form-group { margin-bottom:1.1rem; }
+
+.form-group label {
+  display:block; font-size:0.82rem;
+  color:var(--muted2); margin-bottom:0.45rem;
+  font-weight:500;
+}
+
+.form-group input, .form-group select {
+  width:100%;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:11px;
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.95rem;
+  padding:0.75rem 1rem;
+  outline:none;
+  transition:all 0.2s;
+}
+
+.form-group input:focus, .form-group select:focus {
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-glow);
+}
+
+.form-group input::placeholder { color:var(--muted); }
+
+.role-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:0.6rem;
+}
+
+.role-opt {
+  background:var(--surface2);
+  border:2px solid var(--border);
+  border-radius:11px;
+  padding:0.8rem;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-align:center;
+}
+
+.role-opt:hover { border-color:var(--border2); }
+.role-opt.selected { border-color:var(--accent); background:#7c6dfa12; }
+.role-opt .r-icon { font-size:1.4rem; margin-bottom:0.3rem; }
+.role-opt .r-label { font-size:0.82rem; font-weight:500; color:var(--muted2); }
+.role-opt.selected .r-label { color:var(--accent); }
+
+.btn-full {
+  width:100%; padding:0.85rem;
+  border-radius:12px; border:none;
+  font-family:'DM Sans',sans-serif;
+  font-size:1rem; font-weight:500;
+  cursor:pointer; transition:all 0.2s;
+  margin-top:0.5rem;
+}
+
+.btn-accent {
+  background:var(--accent); color:#fff;
+}
+
+.btn-accent:hover { background:#8e80fb; transform:translateY(-1px); box-shadow:0 8px 24px var(--accent-glow); }
+
+.auth-divider {
+  text-align:center; color:var(--muted);
+  font-size:0.82rem; margin:1rem 0;
+  position:relative;
+}
+
+.auth-divider::before, .auth-divider::after {
+  content:''; position:absolute;
+  top:50%; width:40%; height:1px;
+  background:var(--border2);
+}
+
+.auth-divider::before { left:0; }
+.auth-divider::after { right:0; }
+
+/* ─── APP ─── */
+#screen-app { display:none; }
+#screen-app.active { display:block; }
+
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center;
+  justify-content:space-between;
+  padding:0 2rem;
+  height:60px;
+  background:#07070dee;
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+
+.nav-logo {
+  font-family:'Syne',sans-serif;
+  font-weight:800; font-size:1.3rem;
+  letter-spacing:-0.04em; cursor:pointer;
+}
+
+.nav-logo span { color:var(--accent); }
+
+.nav-links {
+  display:flex; gap:0.3rem; list-style:none;
+}
+
+.nav-links button {
+  background:none; border:none;
+  color:var(--muted2);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.88rem; font-weight:500;
+  padding:0.45rem 0.9rem;
+  border-radius:8px; cursor:pointer;
+  transition:all 0.2s;
+  display:flex; align-items:center; gap:0.4rem;
+}
+
+.nav-links button:hover { color:var(--text); background:var(--surface2); }
+.nav-links button.active { color:var(--text); background:var(--surface2); }
+
+.notif-badge {
+  background:var(--accent2); color:#fff;
+  font-size:0.65rem; font-weight:700;
+  padding:0.1rem 0.4rem;
+  border-radius:100px; min-width:18px;
+  text-align:center;
+}
+
+.nav-right { display:flex; align-items:center; gap:0.8rem; }
+
+.user-pill {
+  display:flex; align-items:center; gap:0.6rem;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:100px;
+  padding:0.3rem 0.9rem 0.3rem 0.4rem;
+  cursor:pointer; transition:all 0.2s;
+}
+
+.user-pill:hover { border-color:var(--border2); background:var(--surface3); }
+
+.mini-avatar {
+  width:28px; height:28px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Syne',sans-serif;
+  font-size:0.7rem; font-weight:800;
+}
+
+.user-pill .uname { font-size:0.85rem; font-weight:500; }
+
+/* PAGES */
+.page { display:none; padding-top:60px; }
+.page.active { display:block; animation:fadeIn 0.3s ease; }
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+/* ─── HOME ─── */
+.hero {
+  display:flex; flex-direction:column;
+  align-items:center; text-align:center;
+  padding:5rem 2rem 3rem; gap:1.2rem;
+}
+
+.hero-chip {
+  display:inline-flex; align-items:center; gap:0.5rem;
+  background:#7c6dfa10; border:1px solid #7c6dfa28;
+  color:#b0a8ff; font-size:0.78rem; font-weight:500;
+  padding:0.35rem 1rem; border-radius:100px;
+  animation:fadeDown 0.5s ease both;
+}
+
+.hero h1 {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.5rem,5.5vw,4.5rem);
+  font-weight:800; line-height:1.06;
+  letter-spacing:-0.04em; max-width:750px;
+  animation:fadeUp 0.5s 0.1s ease both;
+}
+
+.hero h1 .grad {
+  background:linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+
+.hero p {
+  color:var(--muted2); font-size:1.05rem;
+  max-width:480px; line-height:1.7;
+  animation:fadeUp 0.5s 0.15s ease both;
+}
+
+.hero-cta {
+  display:flex; gap:0.8rem;
+  animation:fadeUp 0.5s 0.2s ease both;
+}
+
+.btn { font-family:'DM Sans',sans-serif; font-weight:500; border:none; cursor:pointer; transition:all 0.2s; border-radius:10px; }
+.btn-md { padding:0.65rem 1.5rem; font-size:0.95rem; }
+.btn-lg-hero { padding:0.8rem 2rem; font-size:1rem; border-radius:12px; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:#8e80fb; transform:translateY(-1px); box-shadow:0 8px 24px var(--accent-glow); }
+.btn-ghost { background:none; color:var(--text); border:1px solid var(--border2); }
+.btn-ghost:hover { background:var(--surface2); }
+.btn-sm { padding:0.4rem 0.9rem; font-size:0.82rem; border-radius:8px; }
+.btn-danger { background:#fa6d8e18; color:var(--accent2); border:1px solid #fa6d8e22; }
+.btn-danger:hover { background:#fa6d8e28; }
+.btn-success { background:#4eeaa018; color:var(--accent3); border:1px solid #4eeaa022; }
+.btn-success:hover { background:#4eeaa028; }
+
+.stats-row {
+  display:flex; justify-content:center; gap:4rem;
+  padding:2.5rem 2rem;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  animation:fadeUp 0.5s 0.25s ease both;
+}
+
+.stat { text-align:center; }
+.stat-n {
+  font-family:'Syne',sans-serif;
+  font-size:2rem; font-weight:800;
+}
+.stat-l { color:var(--muted2); font-size:0.82rem; margin-top:0.2rem; }
+
+.feat-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1rem; padding:3rem 2.5rem;
+  max-width:1000px; margin:0 auto;
+}
+
+.feat-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px; padding:1.6rem;
+  transition:all 0.3s;
+  animation:fadeUp 0.5s ease both;
+}
+
+.feat-card:hover {
+  border-color:#7c6dfa22;
+  transform:translateY(-4px);
+  box-shadow:0 16px 40px #7c6dfa0c;
+}
+
+.f-icon {
+  width:42px; height:42px;
+  border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem; margin-bottom:1rem;
+}
+
+.feat-card h3 { font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:700; margin-bottom:0.5rem; }
+.feat-card p { color:var(--muted2); font-size:0.87rem; line-height:1.6; }
+
+/* ─── SORULAR ─── */
+.pg-header {
+  display:flex; align-items:center;
+  justify-content:space-between;
+  padding:2rem 2.5rem 1.2rem;
+  gap:1rem; flex-wrap:wrap;
+}
+
+.pg-title { font-family:'Syne',sans-serif; font-size:1.7rem; font-weight:800; letter-spacing:-0.03em; }
+
+.search-wrap {
+  display:flex; align-items:center; gap:0.6rem;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:11px; padding:0.55rem 1rem;
+  width:260px;
+}
+
+.search-wrap input {
+  background:none; border:none;
+  color:var(--text); font-family:'DM Sans',sans-serif;
+  font-size:0.9rem; outline:none; width:100%;
+}
+
+.search-wrap input::placeholder { color:var(--muted); }
+
+.filter-row {
+  display:flex; gap:0.5rem;
+  padding:0 2.5rem 1.2rem; flex-wrap:wrap;
+}
+
+.fc {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  color:var(--muted2); font-family:'DM Sans',sans-serif;
+  font-size:0.8rem; padding:0.35rem 0.9rem;
+  border-radius:100px; cursor:pointer;
+  transition:all 0.2s;
+}
+
+.fc:hover { color:var(--text); border-color:var(--border2); }
+.fc.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+
+.q-list {
+  padding:0 2.5rem 3rem;
+  display:flex; flex-direction:column; gap:0.8rem;
+  max-width:860px;
+}
+
+.q-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px; padding:1.4rem;
+  cursor:pointer; transition:all 0.25s;
+  animation:fadeUp 0.35s ease both;
+}
+
+.q-card:hover {
+  border-color:#7c6dfa20;
+  transform:translateX(5px);
+  box-shadow:inset 3px 0 0 var(--accent);
+}
+
+.q-head { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:0.75rem; }
+
+.q-ttl { font-family:'Syne',sans-serif; font-size:0.97rem; font-weight:700; line-height:1.4; }
+
+.badge {
+  font-size:0.7rem; font-weight:600;
+  padding:0.22rem 0.7rem; border-radius:100px;
+  white-space:nowrap; flex-shrink:0;
+}
+
+.b-open { background:#4eeaa015; color:var(--accent3); border:1px solid #4eeaa025; }
+.b-answered { background:#7c6dfa15; color:#b0a8ff; border:1px solid #7c6dfa25; }
+.b-closed { background:#ffffff08; color:var(--muted2); border:1px solid var(--border); }
+
+.q-foot {
+  display:flex; align-items:center;
+  gap:0.8rem; color:var(--muted); font-size:0.8rem;
+  flex-wrap:wrap;
+}
+
+.q-foot .av {
+  width:24px; height:24px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.65rem; font-weight:700;
+}
+
+.tag {
+  background:var(--surface3); color:var(--muted2);
+  font-size:0.72rem; padding:0.18rem 0.55rem;
+  border-radius:6px;
+}
+
+/* ─── SORU DETAY ─── */
+.detail-wrap { max-width:820px; padding:2rem 2.5rem 3rem; }
+
+.back-btn {
+  display:inline-flex; align-items:center; gap:0.5rem;
+  color:var(--muted2); font-size:0.88rem;
+  cursor:pointer; transition:color 0.2s;
+  margin-bottom:1.5rem;
+  background:none; border:none;
+  font-family:'DM Sans',sans-serif;
+}
+
+.back-btn:hover { color:var(--text); }
+
+.detail-title {
+  font-family:'Syne',sans-serif;
+  font-size:1.6rem; font-weight:800;
+  line-height:1.3; letter-spacing:-0.03em;
+  margin-bottom:1rem;
+}
+
+.detail-meta {
+  display:flex; align-items:center;
+  gap:1rem; color:var(--muted2); font-size:0.85rem;
+  margin-bottom:1.5rem; flex-wrap:wrap;
+}
+
+.detail-body {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:14px; padding:1.5rem;
+  line-height:1.8; color:var(--muted2);
+  margin-bottom:2rem; font-size:0.95rem;
+}
+
+.answers-hd {
+  font-family:'Syne',sans-serif;
+  font-size:1.1rem; font-weight:700;
+  margin-bottom:1rem;
+  display:flex; align-items:center; gap:0.6rem;
+}
+
+.answer-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px; padding:1.3rem;
+  margin-bottom:0.8rem;
+  transition:all 0.2s;
+  animation:fadeUp 0.3s ease both;
+}
+
+.answer-card.accepted {
+  border-color:#4eeaa030;
+  background:#4eeaa008;
+}
+
+.answer-head {
+  display:flex; align-items:center;
+  gap:0.7rem; margin-bottom:0.8rem;
+}
+
+.answer-body { color:var(--muted2); line-height:1.7; font-size:0.93rem; }
+
+.answer-foot {
+  display:flex; align-items:center;
+  justify-content:space-between;
+  margin-top:0.8rem;
+}
+
+.accepted-tag {
+  display:inline-flex; align-items:center; gap:0.3rem;
+  background:#4eeaa015; color:var(--accent3);
+  font-size:0.75rem; padding:0.25rem 0.7rem;
+  border-radius:100px; border:1px solid #4eeaa025;
+}
+
+.write-answer {
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:16px; padding:1.5rem;
+  margin-top:1.5rem;
+}
+
+.write-answer h3 {
+  font-family:'Syne',sans-serif;
+  font-size:1rem; font-weight:700;
+  margin-bottom:1rem;
+}
+
+.write-answer textarea {
+  width:100%; min-height:120px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:11px; color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.93rem; padding:0.8rem 1rem;
+  outline:none; resize:vertical;
+  transition:border-color 0.2s;
+}
+
+.write-answer textarea:focus { border-color:var(--accent); }
+.write-answer textarea::placeholder { color:var(--muted); }
+
+/* ─── BİLDİRİMLER ─── */
+.notif-wrap { max-width:700px; padding:2rem 2.5rem 3rem; }
+
+.notif-item {
+  display:flex; gap:1rem; align-items:flex-start;
+  padding:1rem 1.2rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px; margin-bottom:0.6rem;
+  transition:all 0.2s;
+  animation:fadeUp 0.3s ease both;
+  position:relative; overflow:hidden;
+}
+
+.notif-item.unread::before {
+  content:''; position:absolute;
+  left:0; top:0; bottom:0; width:3px;
+  background:var(--accent);
+  border-radius:3px 0 0 3px;
+}
+
+.notif-item.new-pulse {
+  animation:pulseBorder 0.8s ease;
+}
+
+@keyframes pulseBorder {
+  0%   { border-color: var(--accent); box-shadow: 0 0 0 0 var(--accent-glow); }
+  50%  { border-color: var(--accent); box-shadow: 0 0 0 6px transparent; }
+  100% { border-color: var(--border); box-shadow: none; }
+}
+
+.n-icon {
+  width:38px; height:38px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; flex-shrink:0;
+}
+
+.n-msg { font-size:0.9rem; line-height:1.45; }
+.n-time { color:var(--muted); font-size:0.77rem; margin-top:0.25rem; }
+
+/* ─── ADMIN ─── */
+.admin-stats {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:1rem; padding:2rem 2.5rem 1.5rem;
+}
+
+.a-stat {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px; padding:1.4rem;
+  animation:fadeUp 0.4s ease both;
+}
+
+.a-stat .al { color:var(--muted2); font-size:0.8rem; margin-bottom:0.4rem; }
+.a-stat .av2 { font-family:'Syne',sans-serif; font-size:1.9rem; font-weight:800; }
+.a-stat .ac { font-size:0.78rem; margin-top:0.3rem; }
+.up { color:var(--accent3); } .dn { color:var(--accent2); }
+
+.admin-sec { padding:0 2.5rem 2rem; max-width:900px; }
+.sec-hd {
+  font-family:'Syne',sans-serif;
+  font-size:0.75rem; font-weight:700;
+  color:var(--muted); text-transform:uppercase;
+  letter-spacing:0.1em; margin-bottom:0.8rem;
+}
+
+.u-row {
+  display:flex; align-items:center; gap:0.8rem;
+  padding:0.85rem 1rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:11px; margin-bottom:0.5rem;
+  transition:all 0.2s;
+}
+
+.u-row:hover { border-color:var(--border2); }
+.u-info { flex:1; }
+.u-name { font-weight:500; font-size:0.92rem; }
+.u-email { color:var(--muted); font-size:0.78rem; margin-top:0.1rem; }
+
+.rb {
+  font-size:0.7rem; font-weight:600;
+  padding:0.2rem 0.65rem; border-radius:100px;
+}
+
+.rb-s { background:#7c6dfa15; color:#b0a8ff; }
+.rb-t { background:#4eeaa015; color:var(--accent3); }
+.rb-a { background:#fa6d8e15; color:var(--accent2); }
+
+/* ─── LIVE TOAST ─── */
+.toast-container {
+  position:fixed; top:72px; right:1.5rem;
+  z-index:999; display:flex;
+  flex-direction:column; gap:0.6rem;
+  pointer-events:none;
+}
+
+.toast {
+  background:var(--surface);
+  border:1px solid var(--accent);
+  border-radius:14px; padding:1rem 1.2rem;
+  display:flex; align-items:flex-start; gap:0.8rem;
+  width:320px; pointer-events:all;
+  box-shadow:0 8px 32px #7c6dfa20;
+  animation:toastIn 0.35s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+@keyframes toastIn {
+  from { opacity:0; transform:translateX(20px) scale(0.95); }
+  to   { opacity:1; transform:translateX(0) scale(1); }
+}
+
+.toast.out {
+  animation:toastOut 0.3s ease both;
+}
+
+@keyframes toastOut {
+  to { opacity:0; transform:translateX(20px) scale(0.95); }
+}
+
+.toast-icon { font-size:1.2rem; }
+.toast-content .t-title { font-size:0.87rem; font-weight:500; margin-bottom:0.2rem; }
+.toast-content .t-sub { font-size:0.78rem; color:var(--muted2); line-height:1.4; }
+.toast-close {
+  margin-left:auto; background:none; border:none;
+  color:var(--muted); cursor:pointer; font-size:1rem;
+  line-height:1; padding:0; flex-shrink:0;
+}
+
+/* ─── MODAL ─── */
+.modal-bg {
+  display:none; position:fixed; inset:0;
+  background:#000000b0; backdrop-filter:blur(8px);
+  z-index:200; align-items:center; justify-content:center; padding:2rem;
+}
+
+.modal-bg.open { display:flex; }
+
+.modal {
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:20px; padding:2rem;
+  width:100%; max-width:540px;
+  animation:scaleIn 0.25s cubic-bezier(.34,1.2,.64,1);
+}
+
+.modal h2 { font-family:'Syne',sans-serif; font-size:1.35rem; font-weight:800; margin-bottom:1.5rem; }
+
+.modal-row { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+.modal-actions { display:flex; gap:0.7rem; justify-content:flex-end; margin-top:1.2rem; }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity:0; transform:translateY(-10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity:0; transform:scale(0.94); }
+  to   { opacity:1; transform:scale(1); }
+}
+
+.spinner {
+  width:16px; height:16px;
+  border:2px solid #ffffff40;
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.7s linear infinite;
+  display:inline-block; vertical-align:middle; margin-right:6px;
+}
+
+@keyframes spin { to{transform:rotate(360deg)} }
+</style>
+</head>
+<body>
+
+<!-- ─── TOAST CONTAINER ─── -->
+<div class="toast-container" id="toasts"></div>
+
+<!-- ─── AUTH SCREEN ─── -->
+<div class="screen active" id="screen-auth" style="display:flex">
+  <div class="auth-card">
+    <div class="auth-logo">D<span class="dot">·</span>etud</div>
+    <div class="auth-sub">Öğrenciler ve öğretmenler için bilgi platformu</div>
+
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="switchTab('login')">Giriş Yap</button>
+      <button class="tab-btn" onclick="switchTab('register')">Kayıt Ol</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="tab-login">
+      <div class="form-group">
+        <label>E-posta</label>
+        <input type="email" id="l-email" placeholder="ornek@mail.com" value="eren@detud.com">
+      </div>
+      <div class="form-group">
+        <label>Şifre</label>
+        <input type="password" id="l-pass" placeholder="••••••••" value="123456">
+      </div>
+      <button class="btn-full btn-accent" id="login-btn" onclick="doLogin()">Giriş Yap →</button>
+      <div class="auth-divider">ya da hızlı giriş</div>
+      <div class="role-grid">
+        <div class="role-opt" onclick="quickLogin('student')">
+          <div class="r-icon">🎓</div>
+          <div class="r-label">Öğrenci</div>
+        </div>
+        <div class="role-opt" onclick="quickLogin('teacher')">
+          <div class="r-icon">👩‍🏫</div>
+          <div class="r-label">Öğretmen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="tab-register" style="display:none">
+      <div class="form-group">
+        <label>Ad Soyad</label>
+        <input type="text" id="r-name" placeholder="Adınız Soyadınız">
+      </div>
+      <div class="form-group">
+        <label>E-posta</label>
+        <input type="email" id="r-email" placeholder="ornek@mail.com">
+      </div>
+      <div class="form-group">
+        <label>Şifre</label>
+        <input type="password" id="r-pass" placeholder="En az 6 karakter">
+      </div>
+      <div class="form-group">
+        <label>Rol</label>
+        <div class="role-grid">
+          <div class="role-opt selected" id="role-student" onclick="selectRole('student')">
+            <div class="r-icon">🎓</div>
+            <div class="r-label">Öğrenci</div>
+          </div>
+          <div class="role-opt" id="role-teacher" onclick="selectRole('teacher')">
+            <div class="r-icon">👩‍🏫</div>
+            <div class="r-label">Öğretmen</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-full btn-accent" onclick="doRegister()">Kayıt Ol →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── APP SCREEN ─── -->
+<div class="screen" id="screen-app">
+  <nav>
+    <div class="nav-logo" onclick="showPage('home')">D<span>·</span>etud</div>
+    <ul class="nav-links">
+      <li><button onclick="showPage('home')" id="nav-home" class="active">Ana Sayfa</button></li>
+      <li><button onclick="showPage('sorular')" id="nav-sorular">Sorular</button></li>
+      <li>
+        <button onclick="showPage('bildirimler')" id="nav-bildirimler">
+          🔔 Bildirimler
+          <span class="notif-badge" id="notif-count">3</span>
+        </button>
+      </li>
+      <li><button onclick="showPage('admin')" id="nav-admin" style="display:none">⚙️ Admin</button></li>
+    </ul>
+    <div class="nav-right">
+      <div class="user-pill" onclick="doLogout()">
+        <div class="mini-avatar" id="nav-avatar" style="background:#7c6dfa22;color:#b0a8ff">EÖ</div>
+        <span class="uname" id="nav-uname">Eren Özgü</span>
+        <span style="color:var(--muted);font-size:0.8rem">↗</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HOME PAGE -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <div class="hero-chip">✦ Türkiye'nin eğitim platformu</div>
+      <h1>Sorularını sor,<br><span class="grad">anında cevap al</span></h1>
+      <p>Öğretmenler ve uzmanlardan gerçek zamanlı yardım. Matematik, fizik, kimya ve daha fazlası.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-lg-hero" onclick="showPage('sorular')">Soruları Keşfet</button>
+        <button class="btn btn-ghost btn-lg-hero" onclick="openAskModal()">+ Soru Sor</button>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-n" id="c1">0</div><div class="stat-l">Aktif Öğrenci</div></div>
+      <div class="stat"><div class="stat-n" id="c2">0</div><div class="stat-l">Cevaplanan Soru</div></div>
+      <div class="stat"><div class="stat-n" id="c3">0</div><div class="stat-l">Uzman Öğretmen</div></div>
+      <div class="stat"><div class="stat-n" id="c4">0</div><div class="stat-l">Konu Kategorisi</div></div>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card" style="animation-delay:.05s"><div class="f-icon" style="background:#7c6dfa15">💬</div><h3>Anında Cevap</h3><p>Sorularını gönder, öğretmenler gerçek zamanlı cevaplasın.</p></div>
+      <div class="feat-card" style="animation-delay:.1s"><div class="f-icon" style="background:#fa6d8e15">🎯</div><h3>Konu Bazlı</h3><p>Matematik, fizik, kimya... İstediğin konuda uzmanını bul.</p></div>
+      <div class="feat-card" style="animation-delay:.15s"><div class="f-icon" style="background:#4eeaa015">🔔</div><h3>Canlı Bildirim</h3><p>Sorun cevaplanınca Socket.IO ile anında haberdar ol.</p></div>
+      <div class="feat-card" style="animation-delay:.2s"><div class="f-icon" style="background:#facc1515">⭐</div><h3>En İyi Cevap</h3><p>En doğru cevabı kabul et, topluluğa yol göster.</p></div>
+    </div>
+  </div>
+
+  <!-- SORULAR PAGE -->
+  <div class="page" id="page-sorular">
+    <div class="pg-header">
+      <div class="pg-title">Sorular</div>
+      <div style="display:flex;gap:0.7rem;align-items:center;flex-wrap:wrap">
+        <div class="search-wrap">
+          <span style="color:var(--muted)">🔍</span>
+          <input type="text" placeholder="Soru ara..." oninput="filterQ(this.value)">
+        </div>
+        <button class="btn btn-primary btn-md" onclick="openAskModal()">+ Soru Sor</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <button class="fc active" onclick="setF(this,'tümü')">Tümü</button>
+      <button class="fc" onclick="setF(this,'matematik')">📐 Matematik</button>
+      <button class="fc" onclick="setF(this,'fizik')">⚡ Fizik</button>
+      <button class="fc" onclick="setF(this,'kimya')">🧪 Kimya</button>
+      <button class="fc" onclick="setF(this,'biyoloji')">🧬 Biyoloji</button>
+      <button class="fc" onclick="setF(this,'türkçe')">📖 Türkçe</button>
+    </div>
+    <div class="q-list" id="q-list"></div>
+  </div>
+
+  <!-- DETAY PAGE -->
+  <div class="page" id="page-detay">
+    <div class="detail-wrap">
+      <button class="back-btn" onclick="showPage('sorular')">← Sorulara Dön</button>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- BİLDİRİMLER PAGE -->
+  <div class="page" id="page-bildirimler">
+    <div class="pg-header">
+      <div class="pg-title">Bildirimler</div>
+      <button class="btn btn-ghost btn-sm" onclick="markRead()">Tümünü okundu işaretle</button>
+    </div>
+    <div class="notif-wrap" id="notif-wrap" style="padding-top:0"></div>
+  </div>
+
+  <!-- ADMIN PAGE -->
+  <div class="page" id="page-admin">
+    <div class="pg-header" style="padding-bottom:1rem">
+      <div class="pg-title">Admin Paneli</div>
+      <button class="btn btn-primary btn-md" onclick="doBroadcast()">📢 Duyuru Gönder</button>
+    </div>
+    <div class="admin-stats">
+      <div class="a-stat" style="animation-delay:.05s"><div class="al">Toplam Kullanıcı</div><div class="av2" style="color:#b0a8ff">1,284</div><div class="ac up">↑ +42 bu hafta</div></div>
+      <div class="a-stat" style="animation-delay:.1s"><div class="al">Toplam Soru</div><div class="av2" style="color:var(--accent3)">8,471</div><div class="ac up">↑ +128 bu hafta</div></div>
+      <div class="a-stat" style="animation-delay:.15s"><div class="al">Açık Soru</div><div class="av2" style="color:var(--warn)">247</div><div class="ac dn">↓ -12 dün</div></div>
+      <div class="a-stat" style="animation-delay:.2s"><div class="al">Cevap Oranı</div><div class="av2" style="color:var(--accent2)">94%</div><div class="ac up">↑ +2% bu ay</div></div>
+    </div>
+    <div class="admin-sec">
+      <div class="sec-hd">Kullanıcı Yönetimi</div>
+      <div id="u-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ASK MODAL -->
+<div class="modal-bg" id="ask-modal">
+  <div class="modal">
+    <h2>✏️ Soru Sor</h2>
+    <div class="form-group"><label>Soru Başlığı</label><input type="text" id="q-title" placeholder="Kısa ve net bir başlık..."></div>
+    <div class="form-group"><label>Açıklama</label><textarea id="q-body" rows="4" placeholder="Sorunuzu detaylı açıklayın..." style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.93rem;padding:0.75rem 1rem;outline:none;resize:vertical;transition:border-color 0.2s"></textarea></div>
+    <div class="modal-row">
+      <div class="form-group">
+        <label>Konu</label>
+        <select id="q-subj">
+          <option value="matematik">📐 Matematik</option>
+          <option value="fizik">⚡ Fizik</option>
+          <option value="kimya">🧪 Kimya</option>
+          <option value="biyoloji">🧬 Biyoloji</option>
+          <option value="türkçe">📖 Türkçe</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Sınıf</label>
+        <select id="q-grade">
+          <option>9. Sınıf</option><option>10. Sınıf</option>
+          <option>11. Sınıf</option><option>12. Sınıf</option>
+          <option>Üniversite</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-md" onclick="closeAskModal()">İptal</button>
+      <button class="btn btn-primary btn-md" onclick="submitQ()">Gönder →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────
+let currentUser = null;
+let selectedRole = 'student';
+let activeFilter = 'tümü';
+let searchQ = '';
+let currentQId = null;
+let unreadCount = 3;
+
+const questions = [
+  { id:1, title:"İntegral hesabında parçalı integral ne zaman kullanılır?", body:"Parçalı integral yöntemini ne zaman kullanmalıyım? Özellikle trigonometrik ve logaritmik fonksiyonlarda nasıl uygulanıyor?", subject:"matematik", grade:"12. Sınıf", status:"open", answers:[], views:142, author:{name:"Eren Ö.", initials:"EÖ", color:"#7c6dfa"}, time:"5 dk önce", tags:["integral","kalkülüs"] },
+  { id:2, title:"Newton'un 2. yasasını gerçek hayat örneğiyle açıklar mısınız?", body:"F=ma formülünü anlıyorum ama gerçek hayattan örneklerle daha iyi kavramak istiyorum.", subject:"fizik", grade:"10. Sınıf", status:"answered", answers:[
+    {id:1, author:{name:"Dr. Ayşe K.", initials:"AK", color:"#4eeaa0"}, body:"F=ma formülünde F kuvvet (Newton), m kütle (kg), a ise ivmedir (m/s²). Örnek: Marketten 10 kg alışveriş yaptığınızda ve onu 2 m/s² ivmeyle iterseniz, 20 N kuvvet uygulamanız gerekir. Asansör düşünün: yukarı çıkarken kendinizi daha ağır hissedersiniz çünkü a yukarı yönlüdür.", time:"45 dk önce", accepted:true},
+    {id:2, author:{name:"Mert Y.", initials:"MY", color:"#facc15"}, body:"Araba freni de güzel bir örnek! 1000 kg ağırlığındaki bir araç 5 m/s² yavaşlıyorsa, frenlerin 5000 N kuvvet uyguladığı anlamına gelir.", time:"30 dk önce", accepted:false}
+  ], views:89, author:{name:"Ali K.", initials:"AK", color:"#4eeaa0"}, time:"1 saat önce", tags:["newton","kuvvet"] },
+  { id:3, title:"Asit-baz tepkimelerinde indikatör nasıl çalışır?", body:"pH indikatörlerinin renk değiştirme mekanizmasını anlamak istiyorum.", subject:"kimya", grade:"11. Sınıf", status:"closed", answers:[{id:1, author:{name:"Prof. Ali Y.", initials:"AY", color:"#fa6d8e"}, body:"İndikatörler zayıf asit veya baz özelliği gösteren organik bileşiklerdir. Asidik ve bazik formları farklı renklerdedir. Örneğin fenolftalein: asidik ortamda renksiz, bazik ortamda pembe renk alır.", time:"2 saat önce", accepted:true}], views:203, author:{name:"Selin T.", initials:"ST", color:"#fa6d8e"}, time:"3 saat önce", tags:["asit","baz","indikatör"] },
+  { id:4, title:"DNA replikasyonu ile transkripsiyonun farkı nedir?", body:"Her iki süreç de DNA içeriyor ama aralarındaki temel farkları kavrayamıyorum.", subject:"biyoloji", grade:"11. Sınıf", status:"open", answers:[], views:67, author:{name:"Mert Y.", initials:"MY", color:"#facc15"}, time:"3 saat önce", tags:["dna","genetik"] },
+  { id:5, title:"Türkçede büyük ünlü uyumu istisnalarını sayar mısınız?", body:"Büyük ünlü uyumuna uymayan kelimeleri ve bunların nedenlerini öğrenmek istiyorum.", subject:"türkçe", grade:"9. Sınıf", status:"answered", answers:[{id:1, author:{name:"Öğrt. Fatma S.", initials:"FS", color:"#b0a8ff"}, body:"Türkçeye yabancı dilden giren sözcükler (kitap, kalem), birleşik sözcükler (bugün, biraz), bazı ekler (-yor, -ken, -ki) büyük ünlü uyumuna uymayabilir.", time:"4 saat önce", accepted:true}], views:311, author:{name:"Ayşe B.", initials:"AB", color:"#b0a8ff"}, time:"5 saat önce", tags:["dil bilgisi","ses uyumu"] },
+];
+
+const notifications = [
+  { id:1, icon:"💬", bg:"#7c6dfa15", msg:"\"İntegral hesabında...\" sorunuza yeni bir cevap geldi.", time:"2 dk önce", unread:true },
+  { id:2, icon:"✅", bg:"#4eeaa015", msg:"Cevabınız kabul edildi! Tebrikler 🎉", time:"1 saat önce", unread:true },
+  { id:3, icon:"⭐", bg:"#facc1515", msg:"\"Newton'un 2. yasası\" sorusu öne çıkarıldı.", time:"2 saat önce", unread:true },
+  { id:4, icon:"📢", bg:"#fa6d8e15", msg:"Sistem bakımı 25 Mart 02:00-04:00 arasında.", time:"1 gün önce", unread:false },
+  { id:5, icon:"💬", bg:"#7c6dfa15", msg:"\"Asit-baz tepkimeleri\" sorunuz cevaplandı.", time:"2 gün önce", unread:false },
+];
+
+const usersData = [
+  { name:"Eren Özgü", email:"eren@detud.com", role:"student", active:true },
+  { name:"Dr. Ayşe Kaya", email:"ayse@detud.com", role:"teacher", active:true },
+  { name:"Mert Demir", email:"mert@detud.com", role:"student", active:true },
+  { name:"Prof. Ali Yılmaz", email:"ali@detud.com", role:"teacher", active:false },
+  { name:"Admin", email:"admin@detud.com", role:"admin", active:true },
+];
+
+// ─── AUTH ────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register')));
+  document.getElementById('tab-login').style.display = tab==='login'?'block':'none';
+  document.getElementById('tab-register').style.display = tab==='register'?'block':'none';
+}
+
+function selectRole(r) {
+  selectedRole = r;
+  document.getElementById('role-student').classList.toggle('selected', r==='student');
+  document.getElementById('role-teacher').classList.toggle('selected', r==='teacher');
+}
+
+function quickLogin(role) {
+  const names = { student:{name:'Eren Özgü', initials:'EÖ', color:'#7c6dfa22', tc:'#b0a8ff'}, teacher:{name:'Dr. Ayşe Kaya', initials:'AK', color:'#4eeaa022', tc:'#4eeaa0'} };
+  currentUser = { ...names[role], role, email: role+'@detud.com' };
+  enterApp();
+}
+
+function doLogin() {
+  const btn = document.getElementById('login-btn');
+  btn.innerHTML = '<span class="spinner"></span>Giriş yapılıyor...';
+  btn.disabled = true;
+  setTimeout(() => {
+    currentUser = { name:'Eren Özgü', initials:'EÖ', role:'student', color:'#7c6dfa22', tc:'#b0a8ff', email:'eren@detud.com' };
+    enterApp();
+  }, 1000);
+}
+
+function doRegister() {
+  const name = document.getElementById('r-name').value.trim();
+  if (!name) { showToast('⚠️','Hata','Ad soyad giriniz.'); return; }
+  const initials = name.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+  currentUser = { name, initials, role:selectedRole, color:'#7c6dfa22', tc:'#b0a8ff', email:document.getElementById('r-email').value };
+  enterApp();
+}
+
+function enterApp() {
+  // Update nav
+  document.getElementById('nav-avatar').textContent = currentUser.initials;
+  document.getElementById('nav-avatar').style.background = currentUser.color;
+  document.getElementById('nav-avatar').style.color = currentUser.tc;
+  document.getElementById('nav-uname').textContent = currentUser.name;
+  if (currentUser.role === 'admin' || currentUser.role === 'teacher') {
+    document.getElementById('nav-admin').style.display = 'flex';
+  }
+
+  document.getElementById('screen-auth').style.display = 'none';
+  document.getElementById('screen-app').classList.add('active');
+  showPage('home');
+
+  // Start counters
+  setTimeout(() => {
+    counter('c1', 12840); counter('c2', 84710);
+    counter('c3', 342); counter('c4', 8);
+  }, 300);
+
+  // Start live notification simulation
+  startLiveNotifs();
+
+  showToast('👋', `Hoş geldin, ${currentUser.name.split(' ')[0]}!`, 'D-etud\'a başarıyla giriş yaptın.');
+}
+
+function doLogout() {
+  if (!confirm('Çıkış yapmak istediğinize emin misiniz?')) return;
+  document.getElementById('screen-app').classList.remove('active');
+  document.getElementById('screen-auth').style.display = 'flex';
+  currentUser = null;
+  stopLiveNotifs();
+}
+
+// ─── NAV / PAGES ─────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const nb = document.getElementById('nav-'+name);
+  if (nb) nb.classList.add('active');
+
+  if (name==='sorular') renderQ();
+  if (name==='bildirimler') { renderNotifs(); markRead(); }
+  if (name==='admin') renderUsers();
+}
+
+// ─── QUESTIONS ───────────────────────────────────────
+function renderQ() {
+  const list = document.getElementById('q-list');
+  let filtered = questions.filter(q => {
+    const mf = activeFilter==='tümü' || q.subject===activeFilter;
+    const ms = !searchQ || q.title.toLowerCase().includes(searchQ.toLowerCase());
+    return mf && ms;
+  });
+
+  if (!filtered.length) {
+    list.innerHTML = '<div style="text-align:center;padding:4rem;color:var(--muted)"><div style="font-size:2.5rem;margin-bottom:1rem">🔍</div><p>Soru bulunamadı.</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map((q,i) => `
+    <div class="q-card" style="animation-delay:${i*.04}s" onclick="openDetail(${q.id})">
+      <div class="q-head">
+        <div class="q-ttl">${q.title}</div>
+        <span class="badge b-${q.status}">${q.status==='open'?'Açık':q.status==='answered'?'Cevaplandı':'Kapalı'}</span>
+      </div>
+      <div class="q-foot">
+        <div class="av" style="background:${q.author.color}22;color:${q.author.color}">${q.author.initials}</div>
+        <span>${q.author.name}</span>
+        <span>💬 ${q.answers.length} cevap</span>
+        <span>👁 ${q.views}</span>
+        <span>🕐 ${q.time}</span>
+        ${q.tags.map(t=>`<span class="tag">${t}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function setF(btn, f) {
+  document.querySelectorAll('.fc').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = f;
+  renderQ();
+}
+
+function filterQ(v) { searchQ=v; renderQ(); }
+
+// ─── DETAIL ──────────────────────────────────────────
+function openDetail(id) {
+  currentQId = id;
+  const q = questions.find(x=>x.id===id);
+  q.views++;
+
+  const content = document.getElementById('detail-content');
+  content.innerHTML = `
+    <div class="detail-title">${q.title}</div>
+    <div class="detail-meta">
+      <div class="av" style="background:${q.author.color}22;color:${q.author.color};width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">${q.author.initials}</div>
+      <span>${q.author.name}</span>
+      <span class="badge b-${q.status}">${q.status==='open'?'Açık':q.status==='answered'?'Cevaplandı':'Kapalı'}</span>
+      <span>📐 ${q.subject}</span>
+      <span>🎓 ${q.grade}</span>
+      <span>👁 ${q.views} görüntülenme</span>
+      <span>🕐 ${q.time}</span>
+    </div>
+    <div class="detail-body">${q.body}</div>
+    ${q.tags.map(t=>`<span class="tag" style="margin-right:4px">${t}</span>`).join('')}
+
+    <div style="margin-top:2rem">
+      <div class="answers-hd">💬 Cevaplar <span style="background:var(--surface3);padding:0.2rem 0.6rem;border-radius:8px;font-size:0.8rem;font-weight:500">${q.answers.length}</span></div>
+      <div id="answers-list">
+        ${q.answers.length ? q.answers.map((a,i) => renderAnswer(a,q,i)).join('') : '<div style="color:var(--muted);font-size:0.9rem;padding:1rem 0">Henüz cevap yok. İlk cevaplayan sen ol!</div>'}
+      </div>
+    </div>
+
+    <div class="write-answer">
+      <h3>✍️ Cevap Yaz</h3>
+      <textarea id="ans-text" placeholder="Cevabını buraya yaz..."></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:0.8rem">
+        <button class="btn btn-primary btn-md" onclick="submitAnswer(${id})">Cevabı Gönder →</button>
+      </div>
+    </div>
+  `;
+
+  showPage('detay');
+}
+
+function renderAnswer(a, q, i) {
+  return `
+    <div class="answer-card ${a.accepted?'accepted':''}" style="animation-delay:${i*.05}s" id="answer-${a.id}">
+      <div class="answer-head">
+        <div class="av" style="background:${a.author.color}22;color:${a.author.color};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0">${a.author.initials}</div>
+        <div>
+          <div style="font-weight:500;font-size:0.9rem">${a.author.name}</div>
+          <div style="color:var(--muted);font-size:0.76rem">${a.time}</div>
+        </div>
+        ${a.accepted ? '<span class="accepted-tag" style="margin-left:auto">✓ Kabul Edildi</span>' : ''}
+      </div>
+      <div class="answer-body">${a.body}</div>
+      <div class="answer-foot">
+        <div></div>
+        ${!a.accepted && currentUser && (currentUser.name === q.author.name || currentUser.role === 'admin') ?
+          `<button class="btn btn-success btn-sm" onclick="acceptAnswer(${q.id},${a.id})">✓ Kabul Et</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function submitAnswer(qId) {
+  const text = document.getElementById('ans-text').value.trim();
+  if (!text) { showToast('⚠️','Hata','Cevap metni boş olamaz.'); return; }
+
+  const q = questions.find(x=>x.id===qId);
+  const newAns = {
+    id: Date.now(),
+    author: { name: currentUser.name, initials: currentUser.initials, color: '#7c6dfa' },
+    body: text,
+    time: 'Az önce',
+    accepted: false
+  };
+
+  q.answers.push(newAns);
+  if (q.status === 'open') q.status = 'answered';
+
+  document.getElementById('ans-text').value = '';
+  openDetail(qId);
+
+  // Simüle canlı bildirim — soru sahibine
+  setTimeout(() => {
+    addLiveNotif('💬', `"${q.title.slice(0,40)}..." sorunuza yeni cevap geldi.`);
+  }, 800);
+
+  showToast('✅', 'Cevap gönderildi!', 'Cevabın başarıyla eklendi.');
+}
+
+function acceptAnswer(qId, aId) {
+  const q = questions.find(x=>x.id===qId);
+  q.answers.forEach(a=>a.accepted=false);
+  const ans = q.answers.find(a=>a.id===aId);
+  ans.accepted = true;
+  q.status = 'closed';
+  openDetail(qId);
+  showToast('⭐', 'Cevap kabul edildi!', 'En iyi cevabı seçtin.');
+}
+
+// ─── NOTIFICATIONS ───────────────────────────────────
+function renderNotifs() {
+  const wrap = document.getElementById('notif-wrap');
+  wrap.innerHTML = notifications.map((n,i) => `
+    <div class="notif-item ${n.unread?'unread':''}" style="animation-delay:${i*.04}s" id="notif-${n.id}">
+      <div class="n-icon" style="background:${n.bg}">${n.icon}</div>
+      <div>
+        <div class="n-msg">${n.msg}</div>
+        <div class="n-time">${n.time}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function markRead() {
+  notifications.forEach(n=>n.unread=false);
+  unreadCount = 0;
+  updateBadge();
+  renderNotifs();
+}
+
+function updateBadge() {
+  const badge = document.getElementById('notif-count');
+  if (unreadCount > 0) {
+    badge.textContent = unreadCount;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function addLiveNotif(icon, msg) {
+  const n = { id:Date.now(), icon, bg:'#7c6dfa15', msg, time:'Az önce', unread:true };
+  notifications.unshift(n);
+  unreadCount++;
+  updateBadge();
+
+  // If on notifications page, re-render with pulse
+  const activePage = document.querySelector('.page.active');
+  if (activePage && activePage.id === 'page-bildirimler') {
+    renderNotifs();
+    const el = document.getElementById('notif-'+n.id);
+    if (el) { el.classList.add('new-pulse'); }
+  }
+
+  showToast(icon, 'Yeni bildirim', msg);
+}
+
+// ─── LIVE NOTIF SIMULATION ───────────────────────────
+let liveTimer = null;
+
+const liveMessages = [
+  ['💬', '"Newton\'un 2. yasası" sorusuna yeni cevap geldi.'],
+  ['👍', 'Cevabın 3 kişi tarafından beğenildi.'],
+  ['🎓', 'Dr. Ayşe Kaya sorunuzu inceliyor...'],
+  ['💬', '"DNA replikasyonu" sorusuna cevap geldi.'],
+  ['⭐', 'Cevabın öne çıkarıldı!'],
+  ['🔔', 'Matematik kategorisinde 5 yeni soru var.'],
+];
+
+let liveIdx = 0;
+
+function startLiveNotifs() {
+  liveTimer = setInterval(() => {
+    const [icon, msg] = liveMessages[liveIdx % liveMessages.length];
+    addLiveNotif(icon, msg);
+    liveIdx++;
+  }, 7000);
+}
+
+function stopLiveNotifs() {
+  if (liveTimer) clearInterval(liveTimer);
+}
+
+// ─── ADMIN ───────────────────────────────────────────
+function renderUsers() {
+  document.getElementById('u-list').innerHTML = usersData.map(u => `
+    <div class="u-row">
+      <div class="av" style="background:${u.role==='teacher'?'#4eeaa022':u.role==='admin'?'#fa6d8e22':'#7c6dfa22'};color:${u.role==='teacher'?'#4eeaa0':u.role==='admin'?'#fa6d8e':'#b0a8ff'};width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0">
+        ${u.name.split(' ').map(x=>x[0]).join('').slice(0,2)}
+      </div>
+      <div class="u-info">
+        <div class="u-name">${u.name}</div>
+        <div class="u-email">${u.email}</div>
+      </div>
+      <span class="rb rb-${u.role[0]}">${u.role==='student'?'Öğrenci':u.role==='teacher'?'Öğretmen':'Admin'}</span>
+      <span style="font-size:0.8rem;color:${u.active?'#4eeaa0':'#fa6d8e'}">${u.active?'● Aktif':'● Pasif'}</span>
+      ${u.role!=='admin'?`<button class="btn btn-sm ${u.active?'btn-danger':'btn-success'}" onclick="toggleU('${u.name}')">${u.active?'Devre Dışı':'Aktif Et'}</button>`:''}
+    </div>
+  `).join('');
+}
+
+function toggleU(name) {
+  const u = usersData.find(x=>x.name===name);
+  u.active = !u.active;
+  renderUsers();
+  showToast(u.active?'✅':'⛔', `${name}`, `Hesap ${u.active?'aktif edildi':'devre dışı bırakıldı'}.`);
+}
+
+function doBroadcast() {
+  const msg = prompt('Tüm kullanıcılara gönderilecek duyuru:');
+  if (msg?.trim()) {
+    addLiveNotif('📢', msg.trim());
+    showToast('📢', 'Duyuru gönderildi', `${usersData.length} kullanıcıya iletildi.`);
+  }
+}
+
+// ─── ASK MODAL ───────────────────────────────────────
+function openAskModal() { document.getElementById('ask-modal').classList.add('open'); }
+function closeAskModal() { document.getElementById('ask-modal').classList.remove('open'); }
+
+function submitQ() {
+  const title = document.getElementById('q-title').value.trim();
+  const body = document.getElementById('q-body').value.trim();
+  if (!title || !body) { showToast('⚠️','Eksik bilgi','Başlık ve açıklama zorunludur.'); return; }
+
+  questions.unshift({
+    id: Date.now(), title, body,
+    subject: document.getElementById('q-subj').value,
+    grade: document.getElementById('q-grade').value,
+    status:'open', answers:[], views:0,
+    author:{ name:currentUser.name, initials:currentUser.initials, color:'#7c6dfa' },
+    time:'Az önce', tags:[document.getElementById('q-subj').value]
+  });
+
+  closeAskModal();
+  document.getElementById('q-title').value='';
+  document.getElementById('q-body').value='';
+  showPage('sorular');
+  showToast('✅','Soru yayınlandı!','Sorunuz başarıyla eklendi.');
+}
+
+document.getElementById('ask-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeAskModal(); });
+
+// ─── TOAST ───────────────────────────────────────────
+function showToast(icon, title, sub) {
+  const container = document.getElementById('toasts');
+  const id = 'toast-'+Date.now();
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.id = id;
+  el.innerHTML = `
+    <div class="toast-icon">${icon}</div>
+    <div class="toast-content">
+      <div class="t-title">${title}</div>
+      <div class="t-sub">${sub}</div>
+    </div>
+    <button class="toast-close" onclick="dismissToast('${id}')">✕</button>
+  `;
+  container.appendChild(el);
+  setTimeout(() => dismissToast(id), 4000);
+}
+
+function dismissToast(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('out');
+  setTimeout(() => el.remove(), 300);
+}
+
+// ─── COUNTER ─────────────────────────────────────────
+function counter(elId, target) {
+  const el = document.getElementById(elId);
+  let cur = 0;
+  const step = Math.ceil(target/60);
+  const t = setInterval(() => {
+    cur = Math.min(cur+step, target);
+    el.textContent = cur.toLocaleString('tr');
+    if (cur >= target) clearInterval(t);
+  }, 18);
+}
+</script>
+</body>
+</html>
