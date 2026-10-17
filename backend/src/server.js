@@ -21,6 +21,9 @@ const io = new Server(server, {
   },
 });
 
+// Controller'ların (bildirim, duyuru) Socket.IO'ya erişebilmesi için
+app.set('io', io);
+
 // Middleware
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000' }));
 app.use(express.json());
