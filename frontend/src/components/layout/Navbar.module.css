@@ -48,3 +48,14 @@
 
 .uname { font-size: 0.85rem; font-weight: 500; }
 .exitIcon { color: var(--muted); font-size: 0.8rem; }
+
+/* Mobil: ikonlu bağlantılarda yazıyı gizle, boşlukları daralt */
+@media (max-width: 640px) {
+  .nav { padding: 0 0.75rem; }
+  .logo { font-size: 1.05rem; }
+  .links { gap: 0.1rem; }
+  .navBtn { padding: 0.4rem 0.55rem; font-size: 0.8rem; }
+  .iconLabel, .uname, .exitIcon { display: none; }
+  .userPill { padding: 0.25rem; }
+  .right { gap: 0.4rem; }
+}

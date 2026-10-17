@@ -33,7 +33,7 @@ export default function HomePage({ onNavigate, onAsk }) {
   return (
     <div style={{ position: 'relative', zIndex: 1 }}>
       {/* HERO */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '5rem 2rem 3rem', gap: '1.2rem' }}>
+      <div className="home-hero" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '5rem 2rem 3rem', gap: '1.2rem' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#7c6dfa10', border: '1px solid #7c6dfa28', color: '#b0a8ff', fontSize: '0.78rem', fontWeight: 500, padding: '0.35rem 1rem', borderRadius: '100px', animation: 'fadeDown 0.5s ease both' }}>
           ✦ Türkiye'nin eğitim platformu
         </div>
@@ -46,14 +46,14 @@ export default function HomePage({ onNavigate, onAsk }) {
         <p style={{ color: 'var(--muted2)', fontSize: '1.05rem', maxWidth: 480, lineHeight: 1.7, animation: 'fadeUp 0.5s 0.15s ease both' }}>
           Öğretmenler ve uzmanlardan gerçek zamanlı yardım. Matematik, fizik, kimya ve daha fazlası.
         </p>
-        <div style={{ display: 'flex', gap: '0.8rem', animation: 'fadeUp 0.5s 0.2s ease both' }}>
+        <div className="home-actions" style={{ display: 'flex', gap: '0.8rem', animation: 'fadeUp 0.5s 0.2s ease both' }}>
           <Button variant="primary" size="lg" onClick={() => onNavigate('sorular')}>Soruları Keşfet</Button>
           <Button variant="ghost"   size="lg" onClick={onAsk}>+ Soru Sor</Button>
         </div>
       </div>
 
       {/* STATS */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '4rem', padding: '2.5rem 2rem', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', animation: 'fadeUp 0.5s 0.25s ease both' }}>
+      <div className="home-stats" style={{ display: 'flex', justifyContent: 'center', gap: '4rem', padding: '2.5rem 2rem', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', animation: 'fadeUp 0.5s 0.25s ease both' }}>
         {counters.map(c => (
           <div key={c.id} style={{ textAlign: 'center' }}>
             <div id={c.id} style={{ fontFamily: 'Syne, sans-serif', fontSize: '2rem', fontWeight: 800 }}>0</div>

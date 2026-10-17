@@ -10,9 +10,9 @@ export default function Navbar({ currentPage, onNavigate }) {
   const links = [
     { id: 'home',         label: 'Ana Sayfa' },
     { id: 'sorular',      label: 'Sorular' },
-    { id: 'bildirimler',  label: '🔔 Bildirimler', badge: unreadCount },
+    { id: 'bildirimler',  icon: '🔔', label: 'Bildirimler', badge: unreadCount },
     ...(user?.role === 'admin' || user?.role === 'teacher'
-      ? [{ id: 'admin', label: '⚙️ Admin' }]
+      ? [{ id: 'admin', icon: '⚙️', label: 'Admin' }]
       : []),
   ];
 
@@ -29,7 +29,8 @@ export default function Navbar({ currentPage, onNavigate }) {
               className={`${styles.navBtn} ${currentPage === link.id ? styles.active : ''}`}
               onClick={() => onNavigate(link.id)}
             >
-              {link.label}
+              {link.icon && <span>{link.icon}</span>}
+              <span className={link.icon ? styles.iconLabel : undefined}>{link.label}</span>
               {link.badge > 0 && (
                 <span className={styles.badge}>{link.badge}</span>
               )}
