@@ -1,0 +1,17 @@
+# bağımlılıklar
+node_modules/
+
+# derleme çıktıları
+frontend/build/
+dist/
+
+# ortam değişkenleri (sırlar)
+.env
+.env.*
+!.env.example
+
+# loglar ve geçici dosyalar
+*.log
+npm-debug.log*
+.DS_Store
+coverage/
